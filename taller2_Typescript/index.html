@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Series de Televisión</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .average-row {
+            font-weight: bold;
+        }
+        .card {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1 class="mt-4">Listado de Series de Televisión</h1>
+        <div class="row">
+            <div class="col-md-6">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Canal</th>
+                            <th>Temporadas</th>
+                        </tr>
+                    </thead>
+                    <tbody id="series-table-body"></tbody>
+                    <tfoot>
+                        <tr class="average-row">
+                            <td colspan="3">Promedio de Temporadas:</td>
+                            <td id="average-seasons"></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <div class="col-md-6">
+                <div id="series-detail" class="card" style="display: none;">
+                    <div class="card-body">
+                        <h5 class="card-title" id="detail-title"></h5>
+                        <h6 class="card-subtitle mb-2 text-muted" id="detail-channel"></h6>
+                        <p class="card-text" id="detail-description"></p>
+                        <a id="detail-link" href="#" class="card-link" target="_blank">Ver serie</a>
+                        <img id="detail-image" class="card-img-bottom" alt="Imagen de la serie">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        class Serie {
+            constructor(id, name, channel, seasons, description, url, imageUrl) {
+                this.id = id;
+                this.name = name;
+                this.channel = channel;
+                this.seasons = seasons;
+                this.description = description;
+                this.url = url;
+                this.imageUrl = imageUrl;
+            }
+        }
+
+        export const series = [
+            new Serie(1, "Breaking Bad", "AMC", 5, "Set and filmed in Albuquerque, New Mexico, the series tells the story of Walter White, a struggling and depressed high school chemistry teacher who is diagnosed with lung cancer",
+            "https://www.amctv.la", "https://es.web.img3.acsta.net/pictures/18/04/04/22/52/3191575.jpg"),
+
+            new Serie(2, "Orange Is the New Black", "Netflix", 6, "The series begins revolving around Piper Chapman, a woman in her thirties living in New York City who is sentenced to 15 months in Litchfield Penitentiary",
+            "https://www.netflix.com/browse", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSytwBgWgwjAUOc33QLsnLLPbjbaKbKstlovQ&s"),
+
+            new Serie(3, "Game of Thrones", "HBO", 7, "American fantasy drama", "https://www.max.com/co/es",
+            "https://www.justwatch.com/images/poster/188048368/s718/temporada-1.jpg"),
+
+            new Serie(4, "The Big Bang Theory", "CBS", 12, "Leonard and Sheldon are brilliant physicists—geniuses in the laboratory but socially challenged everywhere else. Enter beautiful, street-smart neighbor Penny...",
+            "https://www.cbs.com/shows/", "https://m.media-amazon.com/images/I/81ksNXITStL._AC_UF894,1000_QL80_.jpg"),
+
+            new Serie(5, "Sherlock", "BBC", 4, "Sherlock depicts consulting detective Sherlock Holmes solving various mysteries in modern-day London...",
+            "https://www.bbc.co.uk/iplayer/categories/drama-and-soaps/featured", "https://resizing.flixster.com/-XZAfHZM39UwaGJIFWKAE8fS0ak=/v3/t/assets/p8992561_b_v8_aa.jpg"),
+
+            new Serie(6, "A Very English Scandal", "BBC", 2, "A Very English Scandal is a fact-based three-part British television comedy-drama miniseries based on John Preston's book of the same name.",
+            "https://www.bbc.co.uk/iplayer/categories/drama-and-soaps/featured", "https://m.media-amazon.com/images/M/MV5BNTQ5NDI0MTQ0MV5BMl5BanBnXkFtZTgwNDEzNTc1NTM@._V1_.jpg"),
+        ];
+
+        // Función para mostrar las series en la tabla
+        function mostrarSeries() {
+            const tableBody = document.getElementById('series-table-body');
+            let totalSeasons = 0;
+
+            series.forEach(serie => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${serie.id}</td>
+                    <td>${serie.name}</td>
+                    <td>${serie.channel}</td>
+                    <td>${serie.seasons}</td>
+                `;
+                row.onclick = () => mostrarDetalle(serie); // Manejar clic en la fila
+                tableBody.appendChild(row);
+                totalSeasons += serie.seasons; // Sumar las temporadas
+            });
+
+            const averageSeasons = (totalSeasons / series.length).toFixed(2); // Calcular el promedio
+            document.getElementById('average-seasons').textContent = averageSeasons; // Mostrar el promedio
+        }
+
+        // Función para mostrar el detalle de la serie seleccionada
+        function mostrarDetalle(serie) {
+            document.getElementById('detail-title').textContent = serie.name;
+            document.getElementById('detail-channel').textContent = `Canal: ${serie.channel}`;
+            document.getElementById('detail-description').textContent = serie.description;
+            document.getElementById('detail-link').href = serie.url;
+            document.getElementById('detail-image').src = serie.imageUrl;
+
+            const detailCard = document.getElementById('series-detail');
+            detailCard.style.display = 'block'; // Mostrar la tarjeta de detalles
+        }
+
+        // Llamar a la función para mostrar las series
+        mostrarSeries();
+    </script>
+
+</body>
+</html>
